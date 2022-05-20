@@ -21,6 +21,7 @@ use ApiResponseTrait;
 
     }
 
+    //Store Products
     public function store(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -59,6 +60,7 @@ use ApiResponseTrait;
 
     }
 
+    //Get specific Product By ID
     public function show($id){
 
         $product = Product::find($id);
@@ -71,6 +73,7 @@ use ApiResponseTrait;
 
     }
 
+    //Update One Product By ID
     public function update(Request $request , $id){
 
         $product = Product::find($id);
