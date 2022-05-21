@@ -3,20 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Repository\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    protected $User;
+
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct(UserRepositoryInterface $User) {
 
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->User = $User;
 
     }
 
@@ -27,17 +31,7 @@ class AuthController extends Controller
      */
     public function login(Request $request){
 
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-        if (! $token = auth()->attempt($validator->validated())) {
-            return response()->json(['error' => 'The email or password you’ve entered is incorrect.'], 401);
-        }
-        return $this->createNewToken($token);
+        return $this->User->userLogin($request);
 
     }
 
@@ -48,23 +42,8 @@ class AuthController extends Controller
      */
     public function register(Request $request) {
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
-        ]);
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-        $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => bcrypt($request->password)]
-        ));
-        return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
+        return $this->User->userRegister($request);
 
-        ], 201);
     }
 
     /**
@@ -74,8 +53,7 @@ class AuthController extends Controller
      */
     public function logout() {
 
-        auth()->logout();
-        return response()->json(['message' => 'User successfully signed out']);
+        return $this->User->userLogout();
 
     }
 
@@ -86,7 +64,7 @@ class AuthController extends Controller
      */
     public function refresh() {
 
-        return $this->createNewToken(auth()->refresh());
+        return $this->User->refreshToken();
 
     }
 
@@ -97,50 +75,14 @@ class AuthController extends Controller
      */
     public function Profile() {
 
-        return response()->json(auth()->user());
+        return $this->User->getUserProfile();
 
     }
 
     public function Profile_Update(Request $request){
 
-        $id = $request->user()->id;
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users,email,'.$id,
-            'password' => 'required|string|confirmed|min:6',
-        ]);
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
-        $user = User::find($request->user()->id);
-        $user->update([
-
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-
-        ]);
-        return response()->json(['message' => 'Profile successfully updated!']);
+        return $this->User->updateProfile($request);
 
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function createNewToken($token){
-
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
-        ]);
-
-    }
 }
