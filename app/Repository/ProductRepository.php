@@ -8,10 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProductRepository implements ProductRepositoryInterface{
-
     use ApiResponseTrait;
 
-    //Get All Products
     public function getAllProducts(){
 
         $products = ProductsResource::collection(Product::get());
@@ -19,7 +17,6 @@ class ProductRepository implements ProductRepositoryInterface{
 
     }
 
-    //Store Products
     public function storeProduct($request){
 
         $validator = Validator::make($request->all(), [
@@ -58,7 +55,6 @@ class ProductRepository implements ProductRepositoryInterface{
 
     }
 
-    //Get specific Product By ID
     public function getOneProduct($id)
     {
         $product = Product::find($id);
@@ -70,7 +66,6 @@ class ProductRepository implements ProductRepositoryInterface{
         return $this->ApiResponse(null,'The Product Not Found!',404);
     }
 
-    //Update One Product By ID
     public function updateProduct($request, $id)
     {
         $product = Product::find($id);
@@ -119,7 +114,6 @@ class ProductRepository implements ProductRepositoryInterface{
         }
     }
 
-    //Delete Product By ID
     public function deleteProduct($id)
     {
         $product = Product::find($id);
