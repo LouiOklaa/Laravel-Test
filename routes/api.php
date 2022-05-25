@@ -37,8 +37,8 @@ Route::group([
 ], function() {
     Route::get('/products',[ProductsController::class,'index']);
     Route::post('/products/create',[ProductsController::class,'store']);
-    Route::get('/products/{id}',[ProductsController::class,'show']);
-    Route::post('/products/update/{id}',[ProductsController::class,'update']);
-    Route::post('/products/destroy/{id}',[ProductsController::class,'destroy']);
+    Route::get('/products/{product}',[ProductsController::class,'show']);
+    Route::post('/products/update/{product}',[ProductsController::class,'update']);
+    Route::post('/products/destroy/{product}',[ProductsController::class,'destroy']);
 });
 

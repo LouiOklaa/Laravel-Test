@@ -11,13 +11,13 @@ interface ProductRepositoryInterface{
     //Store Product
     public function storeProduct($request);
 
-    //Get One Product By ID
-    public function getOneProduct($id);
+    //Get specific Product
+    public function getOneProduct($product);
 
-    //Update Product By ID
-    public function updateProduct($request , $id);
+    //Update Product
+    public function updateProduct($request , $product);
 
-    //Delete Product By ID
-    public function deleteProduct($id);
+    //Delete Product
+    public function deleteProduct($product);
 
 }

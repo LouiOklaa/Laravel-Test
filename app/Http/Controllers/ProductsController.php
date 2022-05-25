@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Api\ApiResponseTrait;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Repository\ProductRepositoryInterface;
 
@@ -32,24 +33,24 @@ class ProductsController extends Controller
 
     }
 
-    //Get specific Product By ID
-    public function show($id){
+    //Get specific Product
+    public function show(Product $product){
 
-        return $this->Product->getOneProduct($id);
-
-    }
-
-    //Update One Product By ID
-    public function update(Request $request , $id){
-
-        return $this->Product->updateProduct($request , $id);
+        return $this->Product->getOneProduct($product);
 
     }
 
-    //Delete Product By ID
-    public function destroy($id){
+    //Update Product
+    public function update(Request $request , Product $product){
 
-        return $this->Product->deleteProduct($id);
+        return $this->Product->updateProduct($request , $product);
+
+    }
+
+    //Delete Product
+    public function destroy(Product $product){
+
+        return $this->Product->deleteProduct($product);
 
     }
 }

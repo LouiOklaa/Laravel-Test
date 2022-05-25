@@ -57,22 +57,21 @@ class ProductRepository implements ProductRepositoryInterface{
 
     }
 
-    //Get One Product By ID
-    public function getOneProduct($id)
+    //Get specific Product
+    public function getOneProduct($product)
     {
-        $product = Product::find($id);
 
         if($product){
 
             return $this->ApiResponse(new ProductsResource($product),'Ok',200);
+
         }
         return $this->ApiResponse(null,'The Product Not Found!',404);
     }
 
-    //Update Product By ID
-    public function updateProduct($request, $id)
+    //Update Product
+    public function updateProduct($request, $product)
     {
-        $product = Product::find($id);
 
         if(!$product){
 
@@ -81,7 +80,7 @@ class ProductRepository implements ProductRepositoryInterface{
         }
 
         $validator = Validator::make($request->all(), [
-            'product_name' => 'required|max:99|unique:products,product_name,'.$id,
+            'product_name' => 'required|max:99|unique:products,product_name,'. $product->id .',id',
             'description' => 'required',
             'image' => 'nullable|mimes:jpeg,png,jpg',
         ]);
@@ -118,10 +117,9 @@ class ProductRepository implements ProductRepositoryInterface{
         }
     }
 
-    //Delete Product By ID
-    public function deleteProduct($id)
+    //Delete Product
+    public function deleteProduct($product)
     {
-        $product = Product::find($id);
 
         if(!$product){
 
