@@ -79,6 +79,7 @@ class ProductApiTest extends TestCase
         $product = Product::factory()->make();
         $product->save();
 
+        $this->withoutExceptionHandling();
         $this->json('POST', "api/products/destroy/$product->id" , [$product])->assertStatus(201);
 
     }

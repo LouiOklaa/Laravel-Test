@@ -99,7 +99,7 @@ class ProductRepository implements ProductRepositoryInterface{
             if ($request->image && $request->image->isValid()){
 
                 //Delete Old Image
-                Storage::disk('public_uploads')->delete($product->image);
+                Storage::disk('public_uploads')->delete("$product->image");
 
                 //Get Random Name With Original Extension
                 $file_name = $request->file('image');
@@ -129,7 +129,7 @@ class ProductRepository implements ProductRepositoryInterface{
 
         $product->delete();
         //Delete Image From Storage
-        Storage::disk('public_uploads')->delete($product->image);
+        Storage::disk('public_uploads')->delete("$product->image");
 
         return $this->ApiResponse(new ProductsResource($product),'The Product Deleted!',201);
 
